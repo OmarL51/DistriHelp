@@ -15,11 +15,13 @@ namespace DistriHelp.API.Data
         }
 
         public DbSet<RequestType> RequestTypes { get; set; }
+        public DbSet<Area> Areas{ get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<RequestType>().HasIndex(x => x.Description).IsUnique();
+            modelBuilder.Entity<Area>().HasIndex(x => x.Description).IsUnique();
         }
 
 
