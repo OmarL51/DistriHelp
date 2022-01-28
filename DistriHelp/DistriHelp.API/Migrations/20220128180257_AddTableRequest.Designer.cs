@@ -4,14 +4,16 @@ using DistriHelp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DistriHelp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220128180257_AddTableRequest")]
+    partial class AddTableRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,39 +41,12 @@ namespace DistriHelp.API.Migrations
                     b.ToTable("Areas");
                 });
 
-            modelBuilder.Entity("DistriHelp.API.Data.Entities.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Description")
-                        .IsUnique();
-
-                    b.ToTable("Categories");
-                });
-
             modelBuilder.Entity("DistriHelp.API.Data.Entities.Request", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("CategoryId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateF")
                         .HasColumnType("datetime2");
@@ -80,10 +55,6 @@ namespace DistriHelp.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RequesType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -105,8 +76,6 @@ namespace DistriHelp.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex("StatusId");
 
@@ -402,10 +371,6 @@ namespace DistriHelp.API.Migrations
 
             modelBuilder.Entity("DistriHelp.API.Data.Entities.Request", b =>
                 {
-                    b.HasOne("DistriHelp.API.Data.Entities.Category", null)
-                        .WithMany("Request")
-                        .HasForeignKey("CategoryId");
-
                     b.HasOne("DistriHelp.API.Data.Entities.Status", "Status")
                         .WithMany("Requests")
                         .HasForeignKey("StatusId");
@@ -484,11 +449,6 @@ namespace DistriHelp.API.Migrations
             modelBuilder.Entity("DistriHelp.API.Data.Entities.Area", b =>
                 {
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("DistriHelp.API.Data.Entities.Category", b =>
-                {
-                    b.Navigation("Request");
                 });
 
             modelBuilder.Entity("DistriHelp.API.Data.Entities.Status", b =>

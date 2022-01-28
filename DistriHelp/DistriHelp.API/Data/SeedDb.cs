@@ -1,4 +1,6 @@
 ﻿using DistriHelp.API.Data.Entities;
+using DistriHelp.API.Helpers;
+using DistriHelp.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +11,12 @@ namespace DistriHelp.API.Data
     public class SeedDb
     {
         private readonly DataContext _context;
-        public SeedDb(DataContext context)
+        private readonly IUserHelper _userHelper;
+
+        public SeedDb(DataContext context, IUserHelper userHelper)
         {
             _context = context;
+            _userHelper = userHelper;
         }
 
         public async Task SeedAsync()
@@ -21,7 +26,14 @@ namespace DistriHelp.API.Data
             await CheckAreasAsync();
             await CheckSolutionsAsync();
             await CheckStatusesAsync();
+           
+           
+
         }
+
+      
+
+    
 
         private async Task CheckStatusesAsync()
         {

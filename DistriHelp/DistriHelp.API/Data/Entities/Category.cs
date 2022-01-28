@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 
 namespace DistriHelp.API.Data.Entities
 {
-    public class Status
+    public class Category
     {
         public int Id { get; set; }
 
-        [Display(Name = "Estado de la solicitud")]
+        [Display(Name = "Categoria")]
         [MaxLength(50, ErrorMessage = "El campo {0} no puede tener más de {1} carácteres")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         public string Description { get; set; }
 
-        public ICollection<Request> Requests { get; set; }
+        public ICollection<Request> Request { get; set; }
     }
 }
-
