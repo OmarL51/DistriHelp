@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.32106.194
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistriHelp.Common", "DistriHelp.Common\DistriHelp.Common.csproj", "{9B4F7088-C36E-46E1-A817-3D3C9965EF93}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistriHelp.API", "DistriHelp.API\DistriHelp.API.csproj", "{9FFF2A98-0FE7-4FD5-A88D-A507269019A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9B4F7088-C36E-46E1-A817-3D3C9965EF93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B4F7088-C36E-46E1-A817-3D3C9965EF93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B4F7088-C36E-46E1-A817-3D3C9965EF93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FFF2A98-0FE7-4FD5-A88D-A507269019A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FFF2A98-0FE7-4FD5-A88D-A507269019A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FFF2A98-0FE7-4FD5-A88D-A507269019A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FFF2A98-0FE7-4FD5-A88D-A507269019A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
