@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DistriHelp.API.Data.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DistriHelp.API.Data.Entities
+namespace DistriHelp.API.Models
 {
-    public class Request
+    public class RequestViewModel
     {
         public int Id { get; set; }
 
@@ -27,18 +28,24 @@ namespace DistriHelp.API.Data.Entities
         [Display(Name = "Categoria")]
         [DataType(DataType.MultilineText)]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        public Category Category { get; set; }
+        public int CategoryId { get; set; }
+        public IEnumerable<SelectListItem> Categories { get; set; }
 
         [Display(Name = "Prioridad")]
+        [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar una prioridad")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        public RequestType RequesType { get; set; }
-
+        public int RequestTypeId { get; set; }
+        public IEnumerable<SelectListItem> RequestTypes { get; set; }
 
         [Display(Name = "Estado")]
-        public Status Status { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un estado")]
+        public int StatusId { get; set; }
+        public IEnumerable<SelectListItem> Statuses { get; set; }
 
         [Display(Name = "Asignado a:")]
-        public User User { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Escoja técnico:")]
+        public string UserId { get; set; }
+        public IEnumerable<SelectListItem> Users { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [Display(Name = "Fecha inicio")]
@@ -56,9 +63,5 @@ namespace DistriHelp.API.Data.Entities
         [Display(Name = "Resolución")]
         [DataType(DataType.MultilineText)]
         public string Resolution { get; set; }
-
-        //[Display(Name = "Adjuntos")]
-        //    public IFormFile File { get; set; }
-        //}
     }
 }

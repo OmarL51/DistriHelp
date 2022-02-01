@@ -42,9 +42,19 @@ namespace DistriHelp.API.Helpers
             }
         }
 
+        public async Task<IdentityResult> DeleteUserAsync(User user)
+        {
+            return await _userManager.DeleteAsync(user);
+        }
+
         public async Task<User> GetUserAsync(string email)
         {
             return await _context.Users.Include(x => x.Area).FirstOrDefaultAsync(x => x.Email == email);
+        }
+
+        public async Task<User> GetUserAsync(Guid Id)
+        {
+            return await _context.Users.Include(x => x.Area).FirstOrDefaultAsync(x => x.Id == Id.ToString());
         }
 
         public async Task<bool> IsUserInRoleAsync(User user, string roleName)
@@ -52,7 +62,7 @@ namespace DistriHelp.API.Helpers
             return await _userManager.IsInRoleAsync(user, roleName);
         }
 
-      
+
 
         public async Task<SignInResult> LoginAsync(LoginViewModel model)
         {
@@ -62,6 +72,15 @@ namespace DistriHelp.API.Helpers
         public async Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            User currentUser = await GetUserAsync(user.Email);
+            currentUser.LastName = user.LastName;
+            currentUser.FirstName = user.FirstName;
+            currentUser.Area = user.Area;
+            return await _userManager.UpdateAsync(currentUser);
         }
     }
 }

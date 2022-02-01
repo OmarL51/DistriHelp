@@ -9,10 +9,13 @@ namespace DistriHelp.API.Helpers
 {
     public interface IConverterHelper
     {
-        Task<User> ToUserAsync(UserViewModel model, Area area, bool isNew);
+        Task<User> ToUserAsync(UserViewModel model, bool isNew);
+        Task<Request> ToRequestAsync(RequestViewModel model, bool isNew);
 
         UserViewModel ToUserViewModel(User user);
-        
-       
+
+        RequestViewModel ToRequestViewModel(Request request);
+
+
     }
 }

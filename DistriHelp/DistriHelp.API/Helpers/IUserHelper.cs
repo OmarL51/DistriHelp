@@ -1,6 +1,7 @@
 ﻿using DistriHelp.API.Data.Entities;
 using DistriHelp.API.Models;
 using Microsoft.AspNetCore.Identity;
+using System;
 using System.Threading.Tasks;
 
 namespace DistriHelp.API.Helpers
@@ -9,7 +10,14 @@ namespace DistriHelp.API.Helpers
     {
         Task<User> GetUserAsync(string email);
 
+        Task<User> GetUserAsync(Guid Id);
+
+
         Task<IdentityResult> AddUserAsync(User user, string password);
+
+        Task<IdentityResult> UpdateUserAsync(User user);
+
+        Task<IdentityResult> DeleteUserAsync(User user);
 
         Task CheckRoleAsync(string roleName);
 
@@ -18,7 +26,6 @@ namespace DistriHelp.API.Helpers
         Task<bool> IsUserInRoleAsync(User user, string roleName);
 
         Task<SignInResult> LoginAsync(LoginViewModel model);
-
 
         Task LogoutAsync();
     }

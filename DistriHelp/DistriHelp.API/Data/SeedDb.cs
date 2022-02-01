@@ -26,14 +26,38 @@ namespace DistriHelp.API.Data
             await CheckAreasAsync();
             await CheckSolutionsAsync();
             await CheckStatusesAsync();
-           
-           
+            await CheckRolesAsync();
+            await CheckUserAsync(1, "Omar", "Lozano", "omar@yopmail.com", "TI", UserType.Admin);
+            await CheckUserAsync(2, "Fredy", "Asprilla", "fredy@yopmail.com", "TI", UserType.User);
+
+
 
         }
 
-      
+        private async Task CheckUserAsync(int id, string firstName, string lastName, string email, string area, UserType userType)
+        {
+            User user = await _userHelper.GetUserAsync(email);
+            if (user == null)
+            {
+                user = new User
+                {
+                    Area = _context.Areas.FirstOrDefault(x => x.Description == "TI"),
+                    Email = email,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    UserName = email,
+                    UserType = userType
+                };
+                await _userHelper.AddUserAsync(user, "1234567");
+                await _userHelper.AddUserToRoleAsync(user, userType.ToString());
+            }
+        }
 
-    
+        private async Task CheckRolesAsync()
+        {
+            await _userHelper.CheckRoleAsync(UserType.Admin.ToString());
+            await _userHelper.CheckRoleAsync(UserType.User.ToString());
+        }
 
         private async Task CheckStatusesAsync()
         {
@@ -55,14 +79,14 @@ namespace DistriHelp.API.Data
                 _context.Solutions.Add(new Solution { Tittle = "C", Description = "TERCERA" });
                 await _context.SaveChangesAsync();
             }
-           
+
         }
 
         private async Task CheckAreasAsync()
         {
             if (!_context.Areas.Any())
             {
-                _context.Areas.Add(new Area{ Description = "GERENCIA" });
+                _context.Areas.Add(new Area { Description = "GERENCIA" });
                 _context.Areas.Add(new Area { Description = "GESTIÓN HUMANA" });
                 _context.Areas.Add(new Area { Description = "TI" });
                 await _context.SaveChangesAsync();
@@ -80,5 +104,5 @@ namespace DistriHelp.API.Data
         }
 
     }
-    
+
 }

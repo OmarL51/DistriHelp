@@ -52,7 +52,23 @@ namespace DistriHelp.API.Helpers
             return list;
         }
 
-     
+        public IEnumerable<SelectListItem> GetComboRequestTypes()
+        {
+            List<SelectListItem> list = _context.RequestTypes.Select(x => new SelectListItem
+            {
+                Text = x.Description,
+                Value = $"{x.Id}"
+
+            }).OrderBy(x => x.Text).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "[Elegir área]",
+                Value = "0"
+            });
+
+            return list;
+        }
 
         public IEnumerable<SelectListItem> GetComboStatuses()
         {
@@ -77,6 +93,24 @@ namespace DistriHelp.API.Helpers
             List<SelectListItem> list = _context.Users.Select(x => new SelectListItem
             {
                 Text = x.FullName,
+                Value = $"{x.Id}"
+
+            }).OrderBy(x => x.Text).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "[Elegir usuario]",
+                Value = "0"
+            });
+
+            return list;
+        }
+
+        public IEnumerable<SelectListItem> GetComboUsersN()
+        {
+            List<SelectListItem> list = _context.Users.Select(x => new SelectListItem
+            {
+                Text = x.Email,
                 Value = $"{x.Id}"
 
             }).OrderBy(x => x.Text).ToList();

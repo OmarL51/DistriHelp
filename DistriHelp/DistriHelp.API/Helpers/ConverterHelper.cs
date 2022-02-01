@@ -16,7 +16,48 @@ namespace DistriHelp.API.Helpers
             _context = context;
             _combosHelper = combosHelper;
         }
-        public async Task<User> ToUserAsync(UserViewModel model, Area area, bool isNew)
+
+        public async Task<Request> ToRequestAsync(RequestViewModel model, bool isNew)
+        {
+            return new Request
+            {
+                Category = await _context.Categories.FindAsync(model.CategoryId),
+                Description = model.Description,
+                DateI = model.DateI,
+                DateF = model.DateF,
+                Id = isNew ? 0 : model.Id,
+                RequesType = await _context.RequestTypes.FindAsync(model.RequestTypeId),
+                Resolution = model.Resolution,
+                Status = await _context.Statuses.FindAsync(model.StatusId),
+                Tittle = model.Tittle,
+                User = await _context.Users.FindAsync(model.UserId),
+                Userr = model.Userr
+            };
+        }
+
+        public RequestViewModel ToRequestViewModel(Request request)
+        {
+            return new RequestViewModel
+            {
+                CategoryId = request.RequesType.Id,
+                Categories = _combosHelper.GetComboCategories(),
+                Description = request.Description,
+                DateI = request.DateI,
+                DateF = request.DateF,
+                Id = request.Id,
+                RequestTypeId = request.RequesType.Id,
+                RequestTypes = _combosHelper.GetComboRequestTypes(),
+                Resolution = request.Resolution,
+                StatusId = request.Status.Id,
+                Statuses = _combosHelper.GetComboStatuses(),
+                Tittle = request.Tittle,
+                UserId = request.User.Id,
+                Users = _combosHelper.GetComboUsersN(),
+                Userr = request.Userr
+            };
+        }
+
+        public async Task<User> ToUserAsync(UserViewModel model, bool isNew)
         {
             return new User
             {
@@ -35,17 +76,18 @@ namespace DistriHelp.API.Helpers
             return new UserViewModel
             {
                 AreaId = user.Area.Id,
-                Area = user.Area,
                 Areas = _combosHelper.GetComboAreas(),
                 Email = user.Email,
                 FirstName = user.FirstName,
                 Id = user.Id,
                 LastName = user.LastName,
-                UserName = user.Email,
                 UserType = user.UserType,
+
 
 
             };
         }
+
+
     }
 }

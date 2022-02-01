@@ -19,7 +19,7 @@ namespace DistriHelp.API.Models
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         public string Password { get; set; }
 
-    
+
         [Display(Name = "Recordarme")]
         public bool RememberMe { get; set; }
 

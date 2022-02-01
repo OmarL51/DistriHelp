@@ -16,7 +16,7 @@ namespace DistriHelp.API.Data
         }
 
         public DbSet<RequestType> RequestTypes { get; set; }
-        public DbSet<Area> Areas{ get; set; }
+        public DbSet<Area> Areas { get; set; }
 
         public DbSet<Solution> Solutions { get; set; }
 
@@ -35,6 +35,7 @@ namespace DistriHelp.API.Data
             modelBuilder.Entity<Solution>().HasIndex(x => x.Description).IsUnique();
             modelBuilder.Entity<Status>().HasIndex(x => x.Description).IsUnique();
             modelBuilder.Entity<Request>().HasIndex(x => x.Tittle).IsUnique();
+            modelBuilder.Entity<Request>().HasIndex(x => x.Id).IsUnique();
             modelBuilder.Entity<Category>().HasIndex(x => x.Description).IsUnique();
         }
 
