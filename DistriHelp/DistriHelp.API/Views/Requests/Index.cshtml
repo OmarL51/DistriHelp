@@ -30,13 +30,13 @@
                                 @Html.DisplayNameFor(model => model.Description)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.RequesType)
+                                @Html.DisplayNameFor(model => model.RequesType.Description)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Category)
+                                @Html.DisplayNameFor(model => model.Category.Description)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Status)
+                                @Html.DisplayNameFor(model => model.Status.Description)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.User)
@@ -67,13 +67,13 @@
                                     @Html.DisplayFor(modelItem => item.Description)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.RequesType)
+                                    @Html.DisplayFor(modelItem => item.RequesType.Description)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Category)
+                                    @Html.DisplayFor(modelItem => item.Category.Description)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Status)
+                                    @Html.DisplayFor(modelItem => item.Status.Description)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.User.UserName)
@@ -95,7 +95,7 @@
                                     }
                                     else
                                     {
-                                        <a asp-action="Edit" asp-route-id="@item.Id">Editar</a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
                                     }
 
                                 </td>

@@ -36,16 +36,26 @@ namespace DistriHelp.API.Controllers
 
 
         // GET: Request/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            Request request = await _context.Requests.Include(x => x.RequesType).Include(x => x.Category).Include(x => x.Status).FirstOrDefaultAsync();
+            if (request == null)
+            {
+                return NotFound();
+            }
+
+
             RequestViewModel model = new RequestViewModel
             {
                 RequestTypes = _combosHelper.GetComboRequestTypes(),
                 Categories = _combosHelper.GetComboCategories(),
                 Statuses = _combosHelper.GetComboStatuses(),
-                Users = _combosHelper.GetComboUsersN()
+                Users = _combosHelper.GetComboUsers()
+
             };
+           
             return View(model);
+
         }
 
         // POST: Requests/Create
@@ -53,24 +63,21 @@ namespace DistriHelp.API.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(RequestViewModel model)
+        public async Task<IActionResult> Create(RequestViewModel requestViewModel)
         {
             if (ModelState.IsValid)
             {
-                Request request = await _converterHelper.ToRequestAsync(model, true);
-
-                _context.Add(request);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-
+                Request request = await _converterHelper.ToRequestAsync(requestViewModel, true);
+            
             }
-            model.RequestTypes = _combosHelper.GetComboRequestTypes();
-            model.Categories = _combosHelper.GetComboCategories();
-            model.Statuses = _combosHelper.GetComboStatuses();
+            requestViewModel.RequestTypes = _combosHelper.GetComboRequestTypes();
+            requestViewModel.Categories = _combosHelper.GetComboCategories();
+            requestViewModel.Statuses = _combosHelper.GetComboStatuses();
+            requestViewModel.Users = _combosHelper.GetComboUsers();
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Areas/Edit/5
+        // GET: Requests/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -78,37 +85,64 @@ namespace DistriHelp.API.Controllers
                 return NotFound();
             }
 
-            Request request = await _context.Requests.FindAsync(id);
+            Request request = await _context.Requests
+                .Include(x => x.RequesType)
+                .Include(x => x.Category)
+                .Include(x => x.Status).Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (request == null)
             {
                 return NotFound();
             }
+
             RequestViewModel model = _converterHelper.ToRequestViewModel(request);
-            return View(request);
+            return View(model);
         }
 
-        // POST: Requests/Edit/5
+        // POST: Request/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, RequestViewModel model)
+        public async Task<IActionResult> Edit(int id, RequestViewModel requestViewModel)
         {
+
+            if (id != requestViewModel.Id)
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
-                Request request = await _converterHelper.ToRequestAsync(model, true);
-
-                _context.Update(request);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-
+                try
+                {
+                    Request request = await _converterHelper.ToRequestAsync(requestViewModel, false);
+                    _context.Requests.Update(request);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException dbUpdateException)
+                {
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Ya existe esta solicitud");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
             }
-            model.RequestTypes = _combosHelper.GetComboRequestTypes();
-            model.Categories = _combosHelper.GetComboCategories();
-            model.Statuses = _combosHelper.GetComboStatuses();
-            return RedirectToAction(nameof(Index));
+            requestViewModel.RequestTypes = _combosHelper.GetComboRequestTypes();
+            requestViewModel.Categories = _combosHelper.GetComboCategories();
+            requestViewModel.Statuses = _combosHelper.GetComboStatuses();
+            requestViewModel.Users = _combosHelper.GetComboUsersN();
+            return View(requestViewModel);
         }
-
         // GET: Requests/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -131,69 +165,11 @@ namespace DistriHelp.API.Controllers
 
         public async Task<IActionResult> AddVehicle(string id)
         {
-            //if (string.IsNullOrEmpty(id))
-            //{
-            //    return NotFound();
-            //}
-
-            //User user = await _context.Users
-            //    .Include(x => x.Vehicles)
-            //    .FirstOrDefaultAsync(x => x.Id == id);
-            //if (user == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //VehicleViewModel model = new VehicleViewModel
-            //{
-            //    Brands = _combosHelper.GetComboBrands(),
-            //    UserId = user.Id,
-            //    VehicleTypes = _combosHelper.GetComboVehicleTypes()
-            //};
+            
 
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddRequest(RequestViewModel requestViewModel)
-        {
-            //Request request = await _context.Requests
-            //    .Include(x => x.RequesType).Include(x => x.Category).Include(x => x.Status).Include(x => x.User)
-            //    .FirstOrDefaultAsync(x => x.Id == requestViewModel.Id);
-            //if (request == null)
-            //{
-            //    return NotFound();
-            //}
-
-
-
-            //try
-            //{
-            //    request.Vehicles.Add(vehicle);
-            //    _context.Users.Update(user);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Details), new { id = user.Id });
-            //}
-            //catch (DbUpdateException dbUpdateException)
-            //{
-            //    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
-            //    {
-            //        ModelState.AddModelError(string.Empty, "Ya existe un vehículo con esa placa.");
-            //    }
-            //    else
-            //    {
-            //        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
-            //    }
-            //}
-            //catch (Exception exception)
-            //{
-            //    ModelState.AddModelError(string.Empty, exception.Message);
-            //}
-
-            //vehicleViewModel.Brands = _combosHelper.GetComboBrands();
-            //vehicleViewModel.VehicleTypes = _combosHelper.GetComboVehicleTypes();
-            return View();
-        }
+       
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DistriHelp.API.Data;
 using DistriHelp.API.Data.Entities;
 using DistriHelp.API.Models;
+using DistriHelp.Common.Enums;
 using System;
 using System.Threading.Tasks;
 
@@ -37,24 +38,49 @@ namespace DistriHelp.API.Helpers
 
         public RequestViewModel ToRequestViewModel(Request request)
         {
-            return new RequestViewModel
+           
+            if (request.Userr.ToString() != "omar@yopmail.com")
             {
-                CategoryId = request.RequesType.Id,
-                Categories = _combosHelper.GetComboCategories(),
-                Description = request.Description,
-                DateI = request.DateI,
-                DateF = request.DateF,
-                Id = request.Id,
-                RequestTypeId = request.RequesType.Id,
-                RequestTypes = _combosHelper.GetComboRequestTypes(),
-                Resolution = request.Resolution,
-                StatusId = request.Status.Id,
-                Statuses = _combosHelper.GetComboStatuses(),
-                Tittle = request.Tittle,
-                UserId = request.User.Id,
-                Users = _combosHelper.GetComboUsersN(),
-                Userr = request.Userr
-            };
+                return new RequestViewModel
+                {
+                    CategoryId = request.Category.Id,
+                    Categories = _combosHelper.GetComboCategories(),
+                    Description = request.Description,
+                    DateI = request.DateI,
+                    DateF = request.DateF,
+                    Id = request.Id,
+                    RequestTypeId = request.RequesType.Id,
+                    RequestTypes = _combosHelper.GetComboRequestTypes(),
+                    Resolution = request.Resolution,
+                    StatusId = request.Status.Id,
+                    Statuses = _combosHelper.GetComboStatuses(),
+                    Tittle = request.Tittle,
+                    Userr = request.Userr
+                };
+
+            }
+            else
+            {
+                return new RequestViewModel
+                {
+                    CategoryId = request.Category.Id,
+                    Categories = _combosHelper.GetComboCategories(),
+                    Description = request.Description,
+                    DateI = request.DateI,
+                    DateF = request.DateF,
+                    Id = request.Id,
+                    RequestTypeId = request.RequesType.Id,
+                    RequestTypes = _combosHelper.GetComboRequestTypes(),
+                    Resolution = request.Resolution,
+                    StatusId = request.Status.Id,
+                    Statuses = _combosHelper.GetComboStatuses(),
+                    Tittle = request.Tittle,
+                    UserId = request.User.Id,
+                    Users = _combosHelper.GetComboUsersN(),
+                    Userr = request.Userr
+                };
+            }
+            
         }
 
         public async Task<User> ToUserAsync(UserViewModel model, bool isNew)
