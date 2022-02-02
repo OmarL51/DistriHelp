@@ -10,6 +10,7 @@ using DistriHelp.API.Data.Entities;
 using DistriHelp.API.Helpers;
 using DistriHelp.API.Models;
 using Microsoft.AspNetCore.Authorization;
+using DistriHelp.Common.Models;
 
 namespace DistriHelp.API.Controllers
 {
@@ -19,12 +20,14 @@ namespace DistriHelp.API.Controllers
         private readonly DataContext _context;
         private readonly ICombosHelper _combosHelper;
         private readonly IConverterHelper _converterHelper;
+        private readonly IMailHelper _mailHelper;
 
-        public RequestsController(DataContext context, ICombosHelper combosHelper, IConverterHelper converterHelper)
+        public RequestsController(DataContext context, ICombosHelper combosHelper, IConverterHelper converterHelper, IMailHelper mailHelper)
         {
             _context = context;
             _combosHelper = combosHelper;
             _converterHelper = converterHelper;
+            _mailHelper = mailHelper;
         }
 
         // GET: Requests
@@ -38,22 +41,15 @@ namespace DistriHelp.API.Controllers
         // GET: Request/Create
         public async Task<IActionResult> Create()
         {
-            Request request = await _context.Requests.Include(x => x.RequesType).Include(x => x.Category).Include(x => x.Status).FirstOrDefaultAsync();
-            if (request == null)
-            {
-                return NotFound();
-            }
-
-
             RequestViewModel model = new RequestViewModel
             {
                 RequestTypes = _combosHelper.GetComboRequestTypes(),
                 Categories = _combosHelper.GetComboCategories(),
                 Statuses = _combosHelper.GetComboStatuses(),
-                Users = _combosHelper.GetComboUsers()
+
 
             };
-           
+
             return View(model);
 
         }
@@ -68,12 +64,20 @@ namespace DistriHelp.API.Controllers
             if (ModelState.IsValid)
             {
                 Request request = await _converterHelper.ToRequestAsync(requestViewModel, true);
-            
+                _context.Add(request);
+                await _context.SaveChangesAsync();
             }
             requestViewModel.RequestTypes = _combosHelper.GetComboRequestTypes();
             requestViewModel.Categories = _combosHelper.GetComboCategories();
             requestViewModel.Statuses = _combosHelper.GetComboStatuses();
-            requestViewModel.Users = _combosHelper.GetComboUsers();
+
+            if (requestViewModel.StatusId == 3)
+            {
+                Response response = _mailHelper.SendMail(requestViewModel.Userr, subject: "DistriHelp - CREACIÓN DE TICKET #" + requestViewModel.Id + "", body: "El usuario:" + requestViewModel.Userr +
+                   $"creo el ticket cuya descripción es:" + requestViewModel.Description +
+                   $"fecha de creación:" + requestViewModel.DateI + "");
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -114,33 +118,24 @@ namespace DistriHelp.API.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
+                
                     Request request = await _converterHelper.ToRequestAsync(requestViewModel, false);
                     _context.Requests.Update(request);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateException dbUpdateException)
+                if (requestViewModel.StatusId == 1)
                 {
-                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
-                    {
-                        ModelState.AddModelError(string.Empty, "Ya existe esta solicitud");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
-                    }
+                    Response response = _mailHelper.SendMail(requestViewModel.Userr, subject: "DistriHelp -TICKET #" + requestViewModel.Id + "RESUELTO", body: "El usuario:" + requestViewModel.Userr +
+                       $"resolvio el ticket cuya descripción es:" + requestViewModel.Description +
+                       $"fecha de creación:" + requestViewModel.DateI + "");
                 }
-                catch (Exception exception)
-                {
-                    ModelState.AddModelError(string.Empty, exception.Message);
-                }
+                return RedirectToAction(nameof(Index));
             }
             requestViewModel.RequestTypes = _combosHelper.GetComboRequestTypes();
             requestViewModel.Categories = _combosHelper.GetComboCategories();
             requestViewModel.Statuses = _combosHelper.GetComboStatuses();
-            requestViewModel.Users = _combosHelper.GetComboUsersN();
+            requestViewModel.Users = _combosHelper.GetComboUsers();
+
+           
             return View(requestViewModel);
         }
         // GET: Requests/Delete/5
@@ -165,11 +160,11 @@ namespace DistriHelp.API.Controllers
 
         public async Task<IActionResult> AddVehicle(string id)
         {
-            
+
 
             return View();
         }
 
-       
+
     }
 }

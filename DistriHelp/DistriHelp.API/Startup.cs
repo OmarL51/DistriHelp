@@ -32,13 +32,14 @@ namespace DistriHelp.API
 
             services.AddIdentity<User, IdentityRole>(x =>
             {
+                x.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
                 x.User.RequireUniqueEmail = true;
                 x.Password.RequireDigit = false;
                 x.Password.RequiredUniqueChars = 0;
                 x.Password.RequireLowercase = false;
                 x.Password.RequireNonAlphanumeric = false;
                 x.Password.RequireUppercase = false;
-            }).AddEntityFrameworkStores<DataContext>();
+            }).AddDefaultTokenProviders().AddEntityFrameworkStores<DataContext>();
 
             services.AddDbContext<DataContext>(x =>
             {
@@ -49,6 +50,7 @@ namespace DistriHelp.API
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<ICombosHelper, CombosHelper>();
             services.AddScoped<IConverterHelper, ConverterHelper>();
+            services.AddScoped<IMailHelper, MailHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

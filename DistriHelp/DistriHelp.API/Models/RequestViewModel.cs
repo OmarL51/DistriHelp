@@ -43,7 +43,6 @@ namespace DistriHelp.API.Models
         public IEnumerable<SelectListItem> Statuses { get; set; }
 
         [Display(Name = "Asignado a:")]
-        [Range(1, int.MaxValue, ErrorMessage = "Escoja técnico:")]
         public string UserId { get; set; }
         public IEnumerable<SelectListItem> Users { get; set; }
 
