@@ -42,7 +42,7 @@
     <select asp-for="StatusId" asp-items="Model.Statuses" class="form-control"></select>
     <span asp-validation-for="StatusId" class="text-danger"></span>
 </div>
-@if (User.IsInRole("Admin"))
+@if (User.IsInRole("Admin") || User.IsInRole("BI"))
 {
     <div class="form-group">
         <label asp-for="UserId" class="control-label"></label>
@@ -56,7 +56,7 @@
     <input asp-for="DateI" class="form-control" />
     <span asp-validation-for="DateI" class="text-danger"></span>
 </div>
-@if (User.IsInRole("Admin"))
+@if (User.IsInRole("Admin") || User.IsInRole("BI"))
 {
     <div class="form-group">
         <label asp-for="DateF" class="control-label"></label>
@@ -65,7 +65,7 @@
     </div>
 }
 
-@if (User.IsInRole("Admin"))
+@if (User.IsInRole("Admin") || User.IsInRole("BI"))
 {
     <div class="form-group">
         <label asp-for="Resolution" class="control-label"></label>

@@ -10,6 +10,10 @@ namespace DistriHelp.API.Helpers
     {
         IEnumerable<SelectListItem> GetComboAreas();
         IEnumerable<SelectListItem> GetComboStatuses();
+
+        IEnumerable<SelectListItem> GetComboStatusesU();
+
+        IEnumerable<SelectListItem> GetComboStatusesA();
         IEnumerable<SelectListItem> GetComboUsers();
 
         IEnumerable<SelectListItem> GetComboUsersN();

@@ -1,5 +1,6 @@
 ﻿using DistriHelp.Common.Models;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 using System;
@@ -30,6 +31,7 @@ namespace DistriHelp.API.Helpers
                 message.From.Add(new MailboxAddress(from));
                 message.To.Add(new MailboxAddress(to));
                 message.Subject = subject;
+                
 
                 BodyBuilder bodyBuilder = new BodyBuilder
                 {

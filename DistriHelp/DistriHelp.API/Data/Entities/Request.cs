@@ -58,7 +58,8 @@ namespace DistriHelp.API.Data.Entities
         public string Resolution { get; set; }
 
         //[Display(Name = "Adjuntos")]
-        //    public IFormFile File { get; set; }
-        //}
+        //public IFormFileCollection Attachments { get; set; }
+
     }
+
 }

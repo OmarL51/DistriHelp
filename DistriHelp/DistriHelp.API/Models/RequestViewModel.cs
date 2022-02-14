@@ -52,12 +52,19 @@ namespace DistriHelp.API.Models
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime DateI { get; set; }
 
+        public RequestViewModel()
+        {
+            DateI = DateTime.Now;
+            DateF = DateTime.Now;
+        }
+
 
         [Display(Name = "Fecha resolución")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime DateF { get; set; }
 
+       
 
         [Display(Name = "Resolución")]
         [DataType(DataType.MultilineText)]

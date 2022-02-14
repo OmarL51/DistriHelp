@@ -33,7 +33,32 @@ namespace DistriHelp.API.Controllers
         // GET: Requests
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Requests.Include(x => x.Category).Include(x => x.RequesType).Include(x => x.Status).Include(x => x.User).ToListAsync());
+           
+            if (User.IsInRole("Admin"))
+            {
+               var mod =  await _context.Requests.Include(x => x.Category).Include(x => x.RequesType).Include(x => x.Status).Include(x => x.User).ToListAsync();
+
+                return View(mod);
+            }
+            else
+            {
+                if (User.Identity.Name == "distribucion@distrimedical.com.co" || User.Identity.Name == "auxiliarlogistica@distrimedical.com.co" || User.Identity.Name == "recepciontecnica2@distrimedical.com.co" || User.Identity.Name == "jaime.marulanda@distrimedical.com.co")
+                {
+                    var modi = await _context.Requests.Include(x => x.Category).Include(x => x.RequesType).Include(x => x.Status).Include(x => x.User).Where(x => x.Userr == "distribucion@distrimedical.com.co" || x.Userr == "auxiliarlogistica@distrimedical.com.co" || x.Userr == "recepciontecnica2@distrimedical.com.co" || x.Userr == "jaime.marulanda@distrimedical.com.co").ToListAsync();
+
+                    return View(modi);
+                }
+                else
+                {
+                    var modii = await _context.Requests.Include(x => x.Category).Include(x => x.RequesType).Include(x => x.Status).Include(x => x.User).Where(x => x.Userr == User.Identity.Name).ToListAsync();
+
+                    return View(modii);
+                }
+                
+
+               
+            }
+
         }
 
 
@@ -41,16 +66,22 @@ namespace DistriHelp.API.Controllers
         // GET: Request/Create
         public async Task<IActionResult> Create()
         {
-            RequestViewModel model = new RequestViewModel
-            {
-                RequestTypes = _combosHelper.GetComboRequestTypes(),
-                Categories = _combosHelper.GetComboCategories(),
-                Statuses = _combosHelper.GetComboStatuses(),
+           
+                RequestViewModel model = new RequestViewModel
+                {
+
+                    RequestTypes = _combosHelper.GetComboRequestTypes(),
+                    Categories = _combosHelper.GetComboCategories(),
+                    Statuses = _combosHelper.GetComboStatusesU(),
 
 
-            };
+                };
+                return View(model);
+            
+           
+           
 
-            return View(model);
+            
 
         }
 
@@ -67,13 +98,24 @@ namespace DistriHelp.API.Controllers
                 _context.Add(request);
                 await _context.SaveChangesAsync();
             }
-            requestViewModel.RequestTypes = _combosHelper.GetComboRequestTypes();
-            requestViewModel.Categories = _combosHelper.GetComboCategories();
-            requestViewModel.Statuses = _combosHelper.GetComboStatuses();
+
+            if (User.IsInRole("Admin"))
+            {
+                requestViewModel.RequestTypes = _combosHelper.GetComboRequestTypes();
+                requestViewModel.Categories = _combosHelper.GetComboCategories();
+                requestViewModel.Statuses = _combosHelper.GetComboStatuses();
+            }
+            else
+            {
+                requestViewModel.RequestTypes = _combosHelper.GetComboRequestTypes();
+                requestViewModel.Categories = _combosHelper.GetComboCategories();
+                requestViewModel.Statuses = _combosHelper.GetComboStatusesU();
+            }
+          
 
             if (requestViewModel.StatusId == 3)
             {
-                Response response = _mailHelper.SendMail(requestViewModel.Userr, subject: "DistriHelp - CREACIÓN DE TICKET #" + requestViewModel.Id + "", body: "El usuario:" + requestViewModel.Userr +
+                Response response = _mailHelper.SendMail(requestViewModel.Userr, subject: "DistriHelp - CREACIÓN DE TICKET #" + requestViewModel.Id  + "", body: "El usuario:" + requestViewModel.Userr +
                    $"creo el ticket cuya descripción es:" + requestViewModel.Description +
                    $"fecha de creación:" + requestViewModel.DateI + "");
             }
@@ -130,10 +172,21 @@ namespace DistriHelp.API.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            requestViewModel.RequestTypes = _combosHelper.GetComboRequestTypes();
-            requestViewModel.Categories = _combosHelper.GetComboCategories();
-            requestViewModel.Statuses = _combosHelper.GetComboStatuses();
-            requestViewModel.Users = _combosHelper.GetComboUsers();
+            if (User.IsInRole("Admin"))
+            {
+                requestViewModel.RequestTypes = _combosHelper.GetComboRequestTypes();
+                requestViewModel.Categories = _combosHelper.GetComboCategories();
+                requestViewModel.Statuses = _combosHelper.GetComboStatuses();
+                requestViewModel.Users = _combosHelper.GetComboUsersN();
+            }
+            else
+            {
+                requestViewModel.RequestTypes = _combosHelper.GetComboRequestTypes();
+                requestViewModel.Categories = _combosHelper.GetComboCategories();
+                requestViewModel.Statuses = _combosHelper.GetComboStatusesA();
+            
+            }
+            
 
            
             return View(requestViewModel);

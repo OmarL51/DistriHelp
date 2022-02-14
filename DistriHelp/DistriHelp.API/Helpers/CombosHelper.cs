@@ -1,4 +1,5 @@
 ﻿using DistriHelp.API.Data;
+using DistriHelp.Common.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -63,7 +64,7 @@ namespace DistriHelp.API.Helpers
 
             list.Insert(0, new SelectListItem
             {
-                Text = "[Elegir área]",
+                Text = "[Elegir prioridad]",
                 Value = "0"
             });
 
@@ -71,13 +72,46 @@ namespace DistriHelp.API.Helpers
         }
 
         public IEnumerable<SelectListItem> GetComboStatuses()
-        {
+        { 
+          
             List<SelectListItem> list = _context.Statuses.Select(x => new SelectListItem
             {
                 Text = x.Description,
                 Value = $"{x.Id}"
 
             }).OrderBy(x => x.Text).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "[Elegir estado]",
+                Value = "0"
+            });
+
+            return list;
+        }
+
+        public IEnumerable<SelectListItem> GetComboStatusesU()
+        {
+            List<SelectListItem> list = _context.Statuses.Select(x => new SelectListItem
+            {
+                Text = x.Description,
+                Value = $"{x.Id}"
+
+            }).Where(x => x.Text == "ABIERTO").OrderBy(x => x.Text).ToList();
+
+           
+
+            return list;
+        }
+
+        public IEnumerable<SelectListItem> GetComboStatusesA()
+        {
+            List<SelectListItem> list = _context.Statuses.Select(x => new SelectListItem
+            {
+                Text = x.Description,
+                Value = $"{x.Id}"
+
+            }).Where(x => x.Text == "ABIERTO" || x.Text == "CERRADO").OrderBy(x => x.Text).ToList();
 
             list.Insert(0, new SelectListItem
             {
@@ -113,7 +147,7 @@ namespace DistriHelp.API.Helpers
                 Text = x.Email,
                 Value = $"{x.Id}"
 
-            }).OrderBy(x => x.Text).ToList();
+            }).Where(x => x.Text == "omar@yopmail.com").OrderBy(x => x.Text).ToList();
 
             list.Insert(0, new SelectListItem
             {

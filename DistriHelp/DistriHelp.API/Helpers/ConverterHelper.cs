@@ -22,6 +22,7 @@ namespace DistriHelp.API.Helpers
         {
             return new Request
             {
+                
                 Category = await _context.Categories.FindAsync(model.CategoryId),
                 Description = model.Description,
                 DateI = model.DateI,
