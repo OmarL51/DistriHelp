@@ -64,7 +64,6 @@ namespace DistriHelp.API.Models
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime DateF { get; set; }
 
-       
 
         [Display(Name = "Resolución")]
         [DataType(DataType.MultilineText)]

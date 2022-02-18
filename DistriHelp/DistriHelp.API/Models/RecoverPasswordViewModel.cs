@@ -11,5 +11,7 @@ namespace DistriHelp.API.Models
         [EmailAddress(ErrorMessage = "El campo {0} es obligatorio")]
         [Required(ErrorMessage = "Debes introducir un email válido")]
         public string Email { get; set; }
+
+
     }
 }

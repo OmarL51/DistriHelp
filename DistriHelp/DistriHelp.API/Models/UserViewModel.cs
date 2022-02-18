@@ -42,6 +42,12 @@ namespace DistriHelp.API.Models
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         public string Email { get; set; }
 
+        [DataType(DataType.Password)]
+        [Display(Name = "Contraseña")]
+        [MaxLength(20, ErrorMessage = "El campo {0} no puede tener más de {1} carácteres")]
+
+        public string Password { get; set; }
+
 
 
 

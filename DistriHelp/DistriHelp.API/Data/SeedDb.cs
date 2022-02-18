@@ -27,9 +27,9 @@ namespace DistriHelp.API.Data
             await CheckSolutionsAsync();
             await CheckStatusesAsync();
             await CheckRolesAsync();
-            await CheckUserAsync(1, "Omar", "Lozano", "omar.lozano@distrimedical.com.co", "TI", UserType.Admin);
-            await CheckUserAsync(2, "Fredy", "Asprilla", "fredy.asprilla@distrimedical.com.co", "TI", UserType.User);
-            await CheckUserAsync(2, "Juan", "Muñoz", "juanpablo.munoz@distrimedical.com.co", "TI", UserType.User);
+            await CheckUserAsync(1, "Soporte", "Tecnico", "soporte@distrimedical.com.co", "TI", UserType.Admin);
+            await CheckUserAsync(2, "Fredy", "Asprilla", "prueba@distrimedical.com.co", "SAC", UserType.User);
+            //await CheckUserAsync(2, "Alexa", "Torres", "alexa@yopmail.com", "BI", UserType.User);
        
 
 
@@ -91,6 +91,11 @@ namespace DistriHelp.API.Data
                 _context.Areas.Add(new Area { Description = "GERENCIA" });
                 _context.Areas.Add(new Area { Description = "GESTIÓN HUMANA" });
                 _context.Areas.Add(new Area { Description = "TI" });
+                _context.Areas.Add(new Area { Description = "BI" });
+                _context.Areas.Add(new Area { Description = "LOGISTICA" });
+                _context.Areas.Add(new Area { Description = "SAC" });
+                _context.Areas.Add(new Area { Description = "COTIZACIONES" });
+                _context.Areas.Add(new Area { Description = "COMERCIAL" });
                 await _context.SaveChangesAsync();
             }
         }
@@ -99,8 +104,9 @@ namespace DistriHelp.API.Data
         {
             if (!_context.RequestTypes.Any())
             {
-                _context.RequestTypes.Add(new RequestType { Description = "TRES" });
-                _context.RequestTypes.Add(new RequestType { Description = "CUATRO" });
+                _context.RequestTypes.Add(new RequestType { Description = "ALTA" });
+                _context.RequestTypes.Add(new RequestType { Description = "MEDIA" });
+                _context.RequestTypes.Add(new RequestType { Description = "BAJA" });
                 await _context.SaveChangesAsync();
             }
         }

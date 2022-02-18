@@ -62,6 +62,11 @@ namespace DistriHelp.API.Helpers
             return await _context.Users.Include(x => x.Area).FirstOrDefaultAsync(x => x.Email == email);
         }
 
+        public async Task<User> GetUserPassAsync(string email)
+        {
+            return await _context.Users.Include(x => x.Area).FirstOrDefaultAsync(x => x.Email == email);
+        }
+
         public async Task<User> GetUserAsync(Guid Id)
         {
             return await _context.Users.Include(x => x.Area).FirstOrDefaultAsync(x => x.Id == Id.ToString());
@@ -95,12 +100,22 @@ namespace DistriHelp.API.Helpers
             currentUser.LastName = user.LastName;
             currentUser.FirstName = user.FirstName;
             currentUser.Area = user.Area;
+            currentUser.Password = user.Password;
             return await _userManager.UpdateAsync(currentUser);
         }
+
+     
 
         public async Task<SignInResult> ValidatePasswordAsync(User user, string password)
         {
             return await _signInManager.CheckPasswordSignInAsync(user, password, false);
+        }
+
+        public async Task<IdentityResult> UpdateUserPassAsync(ResetPasswordViewModel user)
+        {
+            User currentUser = await GetUserAsync(user.UserName);
+            currentUser.Password = user.Password;
+            return await _userManager.UpdateAsync(currentUser);
         }
     }
 }

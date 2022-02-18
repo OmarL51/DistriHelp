@@ -21,13 +21,15 @@ namespace DistriHelp.API.Controllers
         private readonly ICombosHelper _combosHelper;
         private readonly IConverterHelper _converterHelper;
         private readonly IMailHelper _mailHelper;
+        private readonly IUserHelper _userHelper;
 
-        public RequestsController(DataContext context, ICombosHelper combosHelper, IConverterHelper converterHelper, IMailHelper mailHelper)
+        public RequestsController(DataContext context, ICombosHelper combosHelper, IConverterHelper converterHelper, IMailHelper mailHelper, IUserHelper userHelper)
         {
             _context = context;
             _combosHelper = combosHelper;
             _converterHelper = converterHelper;
             _mailHelper = mailHelper;
+            _userHelper = userHelper;
         }
 
         // GET: Requests
@@ -47,6 +49,12 @@ namespace DistriHelp.API.Controllers
                     var modi = await _context.Requests.Include(x => x.Category).Include(x => x.RequesType).Include(x => x.Status).Include(x => x.User).Where(x => x.Userr == "distribucion@distrimedical.com.co" || x.Userr == "auxiliarlogistica@distrimedical.com.co" || x.Userr == "recepciontecnica2@distrimedical.com.co" || x.Userr == "jaime.marulanda@distrimedical.com.co").ToListAsync();
 
                     return View(modi);
+                }
+                else if (User.Identity.Name == "alexandra.torres@distrimedical.com.co")
+                {
+                    var modii = await _context.Requests.Include(x => x.Category).Include(x => x.RequesType).Include(x => x.Status).Include(x => x.User).Where(x => x.Category.Id == 3 || x.Userr == "alexandra.torres@distrimedical.com.co").ToListAsync();
+
+                    return View(modii);
                 }
                 else
                 {
@@ -77,11 +85,6 @@ namespace DistriHelp.API.Controllers
 
                 };
                 return View(model);
-            
-           
-           
-
-            
 
         }
 
@@ -92,9 +95,13 @@ namespace DistriHelp.API.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RequestViewModel requestViewModel)
         {
+
+            User user = await _userHelper.GetUserAsync(requestViewModel.Userr);
+
             if (ModelState.IsValid)
             {
                 Request request = await _converterHelper.ToRequestAsync(requestViewModel, true);
+                
                 _context.Add(request);
                 await _context.SaveChangesAsync();
             }
@@ -115,9 +122,20 @@ namespace DistriHelp.API.Controllers
 
             if (requestViewModel.StatusId == 3)
             {
-                Response response = _mailHelper.SendMail(requestViewModel.Userr, subject: "DistriHelp - CREACIÓN DE TICKET #" + requestViewModel.Id  + "", body: "El usuario:" + requestViewModel.Userr +
-                   $"creo el ticket cuya descripción es:" + requestViewModel.Description +
-                   $"fecha de creación:" + requestViewModel.DateI + "");
+                if (requestViewModel.CategoryId == 3)
+                {
+                    Response response = _mailHelper.SendMail("alexandra.torres@distrimedical.com.co", subject: "DistriHelp - CREACIÓN DE TICKET #" + requestViewModel.Id + "", body: "El usuario:" + requestViewModel.Userr +
+                  $"creo el ticket cuya descripción es:" + requestViewModel.Description +
+                  $"fecha de creación:" + requestViewModel.DateI + "", User.Identity.Name, user.Password);
+                }
+                else
+                {
+                    Response response = _mailHelper.SendMail("soporte@distrimedical.com.co", subject: "DistriHelp - CREACIÓN DE TICKET #" + requestViewModel.Id + "", body: "El usuario:" + requestViewModel.Userr +
+                  $"creo el ticket cuya descripción es:" + requestViewModel.Description +
+                  $"fecha de creación:" + requestViewModel.DateI + "", User.Identity.Name, user.Password);
+                }
+                
+               
             }
 
             return RedirectToAction(nameof(Index));
@@ -152,6 +170,7 @@ namespace DistriHelp.API.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, RequestViewModel requestViewModel)
         {
+            User user = await _userHelper.GetUserAsync(requestViewModel.Userr);
 
             if (id != requestViewModel.Id)
             {
@@ -166,9 +185,56 @@ namespace DistriHelp.API.Controllers
                     await _context.SaveChangesAsync();
                 if (requestViewModel.StatusId == 1)
                 {
-                    Response response = _mailHelper.SendMail(requestViewModel.Userr, subject: "DistriHelp -TICKET #" + requestViewModel.Id + "RESUELTO", body: "El usuario:" + requestViewModel.Userr +
-                       $"resolvio el ticket cuya descripción es:" + requestViewModel.Description +
-                       $"fecha de creación:" + requestViewModel.DateI + "");
+                    if (requestViewModel.CategoryId == 3)
+                    {
+                        Response response = _mailHelper.SendMail(requestViewModel.Userr, subject: "DistriHelp -TICKET #" + requestViewModel.Id + "RESUELTO", body: "El usuario:" + "alexandra.torres@distrimedical.com.co"+
+                      $"resolvio el ticket cuya descripción es:" + requestViewModel.Description +
+                      $"fecha de creación:" + requestViewModel.DateI + "", User.Identity.Name, user.Password);
+                    }
+                    else
+                    {
+                        Response response = _mailHelper.SendMail(requestViewModel.Userr, subject: "DistriHelp -TICKET #" + requestViewModel.Id + "RESUELTO", body: "El usuario:" + User.Identity.Name +
+                      $"resolvio el ticket cuya descripción es:" + requestViewModel.Description +
+                      $"fecha de creación:" + requestViewModel.DateI + "", User.Identity.Name, user.Password);
+                    }
+
+                }
+                else
+                {
+                    if (requestViewModel.StatusId == 3)
+                    {
+                        if (requestViewModel.CategoryId == 3)
+                        {
+                            Response response = _mailHelper.SendMail("alexandra.torres@distrimedical.com.co", subject: "DistriHelp -TICKET #" + requestViewModel.Id + "FUE ABIERTO NUEVAMENTE", body: "El usuario:" + requestViewModel.Userr +
+                          $"resolvio el ticket cuya descripción es:" + requestViewModel.Description +
+                          $"fecha de creación:" + requestViewModel.DateI + "", User.Identity.Name, user.Password);
+                        }
+                        else
+                        {
+                            Response response = _mailHelper.SendMail("soporte@distrimedical.com.co", subject: "DistriHelp -TICKET #" + requestViewModel.Id + "FUE ABIERTO NUEVAMENTE", body: "El usuario:" + requestViewModel.Userr +
+                          $"resolvio el ticket cuya descripción es:" + requestViewModel.Description +
+                          $"fecha de creación:" + requestViewModel.DateI + "", User.Identity.Name, user.Password);
+                        }
+
+                    }
+                    else
+                    {
+                        
+                            if (requestViewModel.CategoryId == 3)
+                            {
+                                Response response = _mailHelper.SendMail(requestViewModel.Userr, subject: "DistriHelp -TICKET #" + requestViewModel.Id + "SE ENCUENTRA PENDIENTE", body: "El usuario:" +"alexandra.torres@distrimedical.com.co" +
+                              $"resolvio el ticket cuya descripción es:" + requestViewModel.Description +
+                              $"fecha de creación:" + requestViewModel.DateI + "", User.Identity.Name, user.Password);
+                            }
+                            else
+                            {
+                                Response response = _mailHelper.SendMail(requestViewModel.Userr, subject: "DistriHelp -TICKET #" + requestViewModel.Id + "SE ENCUENTRA PENDIENTE", body: "El usuario:" + User.Identity.Name +
+                              $"resolvio el ticket cuya descripción es:" + requestViewModel.Description +
+                              $"fecha de creación:" + requestViewModel.DateI + "", User.Identity.Name, user.Password);
+                            }
+
+                        
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }

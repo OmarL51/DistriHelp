@@ -17,6 +17,8 @@ namespace DistriHelp.API.Helpers
 
         Task<IdentityResult> UpdateUserAsync(User user);
 
+        Task<IdentityResult> UpdateUserPassAsync(ResetPasswordViewModel user);
+
         Task<IdentityResult> DeleteUserAsync(User user);
 
         Task CheckRoleAsync(string roleName);

@@ -28,6 +28,12 @@ namespace DistriHelp.API.Data.Entities
         [Display(Name = "Usuario")]
         public string FullName => $"{FirstName} {LastName}";
 
+        [DataType(DataType.Password)]
+        [Display(Name = "Contraseña")]
+        [MaxLength(20, ErrorMessage = "El campo {0} no puede tener más de {1} carácteres")]
+    
+        public string Password { get; set; }
+
         //public ICollection<Request> Requests { get; set; }
     }
 }

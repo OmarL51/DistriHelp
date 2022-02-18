@@ -9,6 +9,6 @@ namespace DistriHelp.API.Helpers
 {
     public interface IMailHelper
     {
-        Response SendMail(string to, string subject, string body);
+        Response SendMail(string to, string subject, string body, string from, string password);
     }
 }

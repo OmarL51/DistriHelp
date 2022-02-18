@@ -15,11 +15,15 @@ namespace DistriHelp.API.Controllers
     {
         private readonly IUserHelper _userHelper;
         private readonly IMailHelper _mailHelper;
+        private readonly IConverterHelper _converterHelper;
+        private readonly ICombosHelper _combosHelper;
 
-        public AccountController(IUserHelper userHelper, IMailHelper mailHelper)
+        public AccountController(IUserHelper userHelper, IMailHelper mailHelper, IConverterHelper converterHelper, ICombosHelper combosHelper)
         {
             _userHelper = userHelper;
             _mailHelper = mailHelper;
+            _converterHelper = converterHelper;
+            _combosHelper = combosHelper;
         }
 
         public IActionResult Login()
@@ -77,6 +81,9 @@ namespace DistriHelp.API.Controllers
                     return View(model);
                 }
 
+
+
+
                 string myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
                 string link = Url.Action(
                     "ResetPassword",
@@ -84,13 +91,14 @@ namespace DistriHelp.API.Controllers
                     new { token = myToken }, protocol: HttpContext.Request.Scheme);
                 _mailHelper.SendMail(model.Email, "DistriHelp - Reseteo de contraseña", $"<h1>DistriHelp - Reseteo de contraseña</h1>" +
                     $"Para establecer una nueva contraseña haga clic en el siguiente enlace:</br></br>" +
-                    $"<a href = \"{link}\">Cambio de Contraseña</a>");
+                    $"<a href = \"{link}\">Cambio de Contraseña</a>", "omaryesid1215@gmail.com", "EliZabeth11");
                 ViewBag.Message = "Las instrucciones para el cambio de contraseña han sido enviadas a su email.";
                 return View();
 
             }
 
-            return View(model);
+              
+                return View(model);
         }
 
         public IActionResult ResetPassword(string token)
@@ -101,15 +109,22 @@ namespace DistriHelp.API.Controllers
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
+           
             User user = await _userHelper.GetUserAsync(model.UserName);
             if (user != null)
             {
                 IdentityResult result = await _userHelper.ResetPasswordAsync(user, model.Token, model.Password);
                 if (result.Succeeded)
                 {
+
+                   
+                    await _userHelper.UpdateUserPassAsync(model);
+
                     ViewBag.Message = "Contaseña cambiada.";
                     return View();
                 }
+               
+         
 
                 ViewBag.Message = "Error cambiando la contraseña.";
                 return View(model);

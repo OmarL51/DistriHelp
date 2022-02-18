@@ -20,6 +20,7 @@ namespace DistriHelp.API.Helpers
 
         public async Task<Request> ToRequestAsync(RequestViewModel model, bool isNew)
         {
+           
             return new Request
             {
                 
@@ -27,13 +28,14 @@ namespace DistriHelp.API.Helpers
                 Description = model.Description,
                 DateI = model.DateI,
                 DateF = model.DateF,
-                Id = isNew ? 0 : model.Id,
+                Id = model.Id,
                 RequesType = await _context.RequestTypes.FindAsync(model.RequestTypeId),
                 Resolution = model.Resolution,
                 Status = await _context.Statuses.FindAsync(model.StatusId),
                 Tittle = model.Tittle,
                 User = await _context.Users.FindAsync(model.UserId),
                 Userr = model.Userr
+                
             };
         }
 
@@ -56,6 +58,8 @@ namespace DistriHelp.API.Helpers
                 //UserId = request.User.Id,
                 Users = _combosHelper.GetComboUsersN(),
                 Userr = request.Userr
+                
+                
             };
 
 
@@ -63,34 +67,80 @@ namespace DistriHelp.API.Helpers
 
         public async Task<User> ToUserAsync(UserViewModel model, bool isNew)
         {
-            return new User
+            if (model.Password == null)
             {
-                Area = await _context.Areas.FindAsync(model.AreaId),
-                Email = model.Email,
-                FirstName = model.FirstName,
-                Id = isNew ? Guid.NewGuid().ToString() : model.Id,
-                LastName = model.LastName,
-                UserName = model.Email,
-                UserType = model.UserType,
-            };
+                return new User
+                {
+                    Area = await _context.Areas.FindAsync(model.AreaId),
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    Id = isNew ? Guid.NewGuid().ToString() : model.Id,
+                    LastName = model.LastName,
+                    UserName = model.Email,
+                    UserType = model.UserType,
+                    Password = "1234567"
+                    
+                };
+            }
+            else
+            {
+
+                return new User
+                {
+                    Area = await _context.Areas.FindAsync(model.AreaId),
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    Id = isNew ? Guid.NewGuid().ToString() : model.Id,
+                    LastName = model.LastName,
+                    UserName = model.Email,
+                    UserType = model.UserType,
+                    Password = model.Password
+                    
+                };
+            }
+           
         }
 
         public UserViewModel ToUserViewModel(User user)
         {
-            return new UserViewModel
+            if (user.Password == null)
             {
-                AreaId = user.Area.Id,
-                Areas = _combosHelper.GetComboAreas(),
-                Email = user.Email,
-                FirstName = user.FirstName,
-                Id = user.Id,
-                LastName = user.LastName,
-                UserType = user.UserType,
+               
+                   return new UserViewModel
+                   {
+                       AreaId = user.Area.Id,
+                       Areas = _combosHelper.GetComboAreas(),
+                       Email = user.Email,
+                       FirstName = user.FirstName,
+                       Id = user.Id,
+                       LastName = user.LastName,
+                       UserType = user.UserType,
+                       Password = "1234567"
 
+                   };
 
+          
+            }
+            else
+            {
+                return new UserViewModel
+                {
+                    AreaId = user.Area.Id,
+                    Areas = _combosHelper.GetComboAreas(),
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    Id = user.Id,
+                    LastName = user.LastName,
+                    UserType = user.UserType,
+                    Password = user.Password
 
-            };
+                };
+               
+            }
+            
         }
+
+
 
 
     }

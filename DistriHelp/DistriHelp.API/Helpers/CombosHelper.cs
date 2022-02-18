@@ -147,7 +147,7 @@ namespace DistriHelp.API.Helpers
                 Text = x.Email,
                 Value = $"{x.Id}"
 
-            }).Where(x => x.Text == "omar@yopmail.com").OrderBy(x => x.Text).ToList();
+            }).Where(x => x.Text == "soporte@distrimedical.com.co").OrderBy(x => x.Text).ToList();
 
             list.Insert(0, new SelectListItem
             {
