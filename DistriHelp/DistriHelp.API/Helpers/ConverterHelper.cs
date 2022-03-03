@@ -34,7 +34,8 @@ namespace DistriHelp.API.Helpers
                 Status = await _context.Statuses.FindAsync(model.StatusId),
                 Tittle = model.Tittle,
                 User = await _context.Users.FindAsync(model.UserId),
-                Userr = model.Userr
+                Userr = model.Userr,
+                //Attachment = model.Attachments
                 
             };
         }
@@ -58,6 +59,8 @@ namespace DistriHelp.API.Helpers
                 //UserId = request.User.Id,
                 Users = _combosHelper.GetComboUsersN(),
                 Userr = request.Userr
+                //Attachments
+                
                 
                 
             };

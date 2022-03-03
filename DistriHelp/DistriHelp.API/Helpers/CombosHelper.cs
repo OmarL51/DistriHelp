@@ -147,7 +147,25 @@ namespace DistriHelp.API.Helpers
                 Text = x.Email,
                 Value = $"{x.Id}"
 
-            }).Where(x => x.Text == "soporte@distrimedical.com.co").OrderBy(x => x.Text).ToList();
+            }).Where(x => x.Text == "juanpablo.munoz@distrimedical.com.co" || x.Text == "omar.lozano@distrimedical.com.co" || x.Text == "fredy.asprilla@distrimedical.com.co" || x.Text == "alexandra.torres@distrimedical.com.co").OrderBy(x => x.Text).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "[Elegir usuario]",
+                Value = "0"
+            });
+
+            return list;
+        }
+
+        public IEnumerable<SelectListItem> GetComboUsersB()
+        {
+            List<SelectListItem> list = _context.Users.Select(x => new SelectListItem
+            {
+                Text = x.Email,
+                Value = $"{x.Id}"
+
+            }).Where(x => x.Text == "alexandra.torres@distrimedical.com.co").OrderBy(x => x.Text).ToList();
 
             list.Insert(0, new SelectListItem
             {

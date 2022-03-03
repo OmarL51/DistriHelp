@@ -17,6 +17,8 @@ namespace DistriHelp.API.Helpers
         IEnumerable<SelectListItem> GetComboUsers();
 
         IEnumerable<SelectListItem> GetComboUsersN();
+
+        IEnumerable<SelectListItem> GetComboUsersB();
         IEnumerable<SelectListItem> GetComboCategories();
 
         IEnumerable<SelectListItem> GetComboRequestTypes();

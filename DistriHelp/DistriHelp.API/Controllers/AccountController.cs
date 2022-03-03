@@ -17,13 +17,15 @@ namespace DistriHelp.API.Controllers
         private readonly IMailHelper _mailHelper;
         private readonly IConverterHelper _converterHelper;
         private readonly ICombosHelper _combosHelper;
+        private readonly IEmailSender _emailSender;
 
-        public AccountController(IUserHelper userHelper, IMailHelper mailHelper, IConverterHelper converterHelper, ICombosHelper combosHelper)
+        public AccountController(IUserHelper userHelper, IMailHelper mailHelper, IConverterHelper converterHelper, ICombosHelper combosHelper, IEmailSender emailSender)
         {
             _userHelper = userHelper;
             _mailHelper = mailHelper;
             _converterHelper = converterHelper;
             _combosHelper = combosHelper;
+            _emailSender = emailSender;
         }
 
         public IActionResult Login()
@@ -89,9 +91,10 @@ namespace DistriHelp.API.Controllers
                     "ResetPassword",
                     "Account",
                     new { token = myToken }, protocol: HttpContext.Request.Scheme);
-                _mailHelper.SendMail(model.Email, "DistriHelp - Reseteo de contraseña", $"<h1>DistriHelp - Reseteo de contraseña</h1>" +
-                    $"Para establecer una nueva contraseña haga clic en el siguiente enlace:</br></br>" +
-                    $"<a href = \"{link}\">Cambio de Contraseña</a>", "omaryesid1215@gmail.com", "EliZabeth11");
+                var message = new Message(new string[] { model.Email }, "DistriHelp - Reseteo de contraseña", $"<h1>DistriHelp - Reseteo de contraseña</h1>" +
+                   $"Para establecer una nueva contraseña haga clic en el siguiente enlace:</br></br>" +
+                   $"<a href = \"{link}\">Cambio de Contraseña</a>", null, "soporte@distrimedical.com.co", "Distrimedical1%");
+                _emailSender.SendEmailAsync(message);
                 ViewBag.Message = "Las instrucciones para el cambio de contraseña han sido enviadas a su email.";
                 return View();
 

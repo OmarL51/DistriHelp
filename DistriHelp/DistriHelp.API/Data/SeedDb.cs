@@ -28,7 +28,10 @@ namespace DistriHelp.API.Data
             await CheckStatusesAsync();
             await CheckRolesAsync();
             await CheckUserAsync(1, "Soporte", "Tecnico", "soporte@distrimedical.com.co", "TI", UserType.Admin);
-            await CheckUserAsync(2, "Fredy", "Asprilla", "prueba@distrimedical.com.co", "SAC", UserType.User);
+            await CheckUserAsync(1, "Juan", "Muñoz", "juanpablo.munoz@distrimedical.com.co", "TI", UserType.Admin);
+            await CheckUserAsync(1, "Omar", "Lozano", "omar.lozano@distrimedical.com.co", "TI", UserType.Admin);
+            await CheckUserAsync(1, "Fredy", "Asprilla", "fredy.asprilla@distrimedical.com.co", "TI", UserType.Admin);
+            await CheckUserAsync(2, "Alexandra", "Torres", "alexandra.torres@distrimedical.com.co", "BI", UserType.User);
             //await CheckUserAsync(2, "Alexa", "Torres", "alexa@yopmail.com", "BI", UserType.User);
        
 

@@ -1,4 +1,5 @@
 ﻿using DistriHelp.API.Data.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -68,5 +69,8 @@ namespace DistriHelp.API.Models
         [Display(Name = "Resolución")]
         [DataType(DataType.MultilineText)]
         public string Resolution { get; set; }
+
+        //[Display(Name = "Adjuntos")]
+        //public int Attachments { get; set; }
     }
 }
